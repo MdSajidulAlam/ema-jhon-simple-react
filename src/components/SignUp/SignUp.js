@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import auth from '../../firebase.init';
 const SignUp = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState('')
+    const navigate = useNavigate()
+
+    const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth)
 
     const handleEmailBlur = (event) => {
         setEmail(event.target.value)
@@ -16,6 +20,9 @@ const SignUp = () => {
     const handleConfirmPasswordBlur = (event) => {
         setConfirmPassword(event.target.value)
     }
+    if (user) {
+        navigate('/shop')
+    }
 
     const handleCreateUser = (event) => {
         event.preventDefault()
@@ -23,6 +30,11 @@ const SignUp = () => {
             setError('Your two passwords did not match')
             return
         }
+        if (password.length < 6) {
+            setError('Password must be 6 character or longer')
+            return
+        }
+        createUserWithEmailAndPassword(email, password)
     }
 
     return (
@@ -43,7 +55,7 @@ const SignUp = () => {
                         <input onBlur={handleConfirmPasswordBlur} type="password" name="" id="" required />
                     </div>
                     <p style={{ color: 'red' }}>{error}</p>
-                    <input className='form-submit' type="submit" value="Login" />
+                    <input className='form-submit' type="submit" value="Sign Up" />
                 </form>
                 <p >
                     Already have an account? <Link className='form-link' to='/login'>Login</Link>
