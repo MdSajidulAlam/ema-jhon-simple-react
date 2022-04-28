@@ -10,11 +10,6 @@ const Shop = () => {
 
     const [cart, setCart] = useState([])
 
-    useEffect(() => {
-        fetch('products.json')
-            .then(res => res.json())
-            .then(data => setProducts(data))
-    }, [])
 
     useEffect(() => {
         const storedCart = getStoredCart()
@@ -50,7 +45,7 @@ const Shop = () => {
             <div className="products-container">
                 {
                     products.map(product => <Product
-                        key={product.id}
+                        key={product._id}
                         product={product}
                         handleAddToCart={handleAddToCart}
                     ></Product>)
